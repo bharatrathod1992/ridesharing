@@ -1,37 +1,35 @@
 package com.allstate.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import com.allstate.enums.Gender;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "cities")
-@Data
-public class City {
+@Table(name = "passengers")
+public class Passenger {
+
     private int id;
     private int version;
     private String name;
-    private String state;
-    private float dayRate;
-    private float nightRate;
+    private int age;
+    private Gender gender;
+    private float credit;
     private Date created;
     private Date modified;
-    private List<Passenger> passengers;
+    private City city;
 
-    public City() {
+    public Passenger() {
     }
 
-    public City(String name, String state, float dayRate, float nightRate) {
+    public Passenger(String name, int age, Gender gender, float credit) {
         this.name = name;
-        this.state = state;
-        this.dayRate = dayRate;
-        this.nightRate = nightRate;
+        this.age = age;
+        this.gender = gender;
+        this.credit = credit;
     }
 
     @Id
@@ -60,27 +58,28 @@ public class City {
     }
 
     @NotNull
-    public String getState() {
-        return state;
+    public int getAge() {
+        return age;
     }
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    @NotNull
-    public float getDayRate() {
-        return dayRate;
-    }
-    public void setDayRate(float dayRate) {
-        this.dayRate = dayRate;
+    public void setAge(int age) {
+        this.age = age;
     }
 
     @NotNull
-    public float getNightRate() {
-        return nightRate;
+    @Enumerated(EnumType.STRING)
+    public Gender getGender() {
+        return gender;
     }
-    public void setNightRate(float nightRate) {
-        this.nightRate = nightRate;
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    @NotNull
+    public float getCredit() {
+        return credit;
+    }
+    public void setCredit(float credit) {
+        this.credit = credit;
     }
 
     @CreationTimestamp
@@ -99,13 +98,12 @@ public class City {
         this.modified = modified;
     }
 
-    @OneToMany(mappedBy = "city")
-    @JsonIgnore
-    public List<Passenger> getPassengers() {
-        return passengers;
+    @ManyToOne
+    @JoinColumn(name="cities_id")
+    public City getCity() {
+        return city;
     }
-    public void setPassengers(List<Passenger> passengers) {
-        this.passengers = passengers;
+    public void setCity(City city) {
+        this.city = city;
     }
 }
-

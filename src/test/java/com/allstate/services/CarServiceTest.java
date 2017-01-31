@@ -1,7 +1,10 @@
 package com.allstate.services;
 
 import com.allstate.entities.Car;
+import com.allstate.entities.Driver;
+import com.allstate.entities.Passenger;
 import com.allstate.enums.CarType;
+import com.allstate.enums.Gender;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.*;
 
@@ -19,6 +23,12 @@ import static org.junit.Assert.*;
 public class CarServiceTest {
 
     private CarService carService;
+    private DriverService driverService;
+
+    @Autowired
+    public void setDriverService(DriverService driverService) {
+        this.driverService = driverService;
+    }
 
     @Autowired
     public void setCarService(CarService carService) {
@@ -37,8 +47,10 @@ public class CarServiceTest {
 
     @Test
     public void shouldCreateCar(){
+        Driver d = this.driverService.find(1);
         Car car = new Car("TATA","NANO",2014, CarType.NORMAL);
-        Car after = this.carService.create(car);
+        car.setDriver(d);
+        Car after = this.carService.create(car);//actually this line wants driver_id
         assertNotNull(after);
     }
 
@@ -54,4 +66,10 @@ public class CarServiceTest {
         assertNull(after);
     }
 
+    @Test
+    @Transactional
+    public void shouldFindTheDriverWhoDriveTheCar() {
+        Driver driver = this.carService.find(1).getDriver();
+        assertEquals(1,driver.getId());
+    }
 }

@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "cars")
-@Data
+//@Data
 public class Car {
 
     private int id;
@@ -21,6 +21,7 @@ public class Car {
     private int year;
     private CarType type;
     private Date created;
+    private Driver driver;
 
     public Car() {
     }
@@ -99,4 +100,14 @@ public class Car {
     public void setModified(Date modified) {
         this.modified = modified;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "drivers_id")
+    public Driver getDriver() {
+        return driver;
+    }
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+
 }

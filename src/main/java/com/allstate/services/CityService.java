@@ -23,4 +23,8 @@ public class CityService {
     public City find(int id) {
         return this.cityRepository.findOne(id);
     }
+
+    public City findByName(String city) {
+        return this.cityRepository.findByName(city);
+    }
 }

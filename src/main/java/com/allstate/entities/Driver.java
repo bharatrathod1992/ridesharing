@@ -1,5 +1,6 @@
 package com.allstate.entities;
 
+import com.allstate.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,27 +12,28 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "cities")
+@Table(name = "drivers")
 @Data
-public class City {
+public class Driver {
     private int id;
     private int version;
     private String name;
-    private String state;
-    private float dayRate;
-    private float nightRate;
+    private int age;
+    private Gender gender;
+    private int noOfViolation;
     private Date created;
     private Date modified;
-    private List<Passenger> passengers;
+    private List<Car> cars;
 
-    public City() {
+
+    public Driver() {
+
     }
 
-    public City(String name, String state, float dayRate, float nightRate) {
+    public Driver(String name, int age, Gender gender) {
         this.name = name;
-        this.state = state;
-        this.dayRate = dayRate;
-        this.nightRate = nightRate;
+        this.age = age;
+        this.gender = gender;
     }
 
     @Id
@@ -60,27 +62,20 @@ public class City {
     }
 
     @NotNull
-    public String getState() {
-        return state;
+    public int getAge() {
+        return age;
     }
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    @NotNull
-    public float getDayRate() {
-        return dayRate;
-    }
-    public void setDayRate(float dayRate) {
-        this.dayRate = dayRate;
+    public void setAge(int age) {
+        this.age = age;
     }
 
     @NotNull
-    public float getNightRate() {
-        return nightRate;
+    @Enumerated(EnumType.STRING)
+    public Gender getGender() {
+        return gender;
     }
-    public void setNightRate(float nightRate) {
-        this.nightRate = nightRate;
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     @CreationTimestamp
@@ -99,13 +94,12 @@ public class City {
         this.modified = modified;
     }
 
-    @OneToMany(mappedBy = "city")
+    @OneToMany(mappedBy = "driver")
     @JsonIgnore
-    public List<Passenger> getPassengers() {
-        return passengers;
+    public List<Car> getCars() {
+        return cars;
     }
-    public void setPassengers(List<Passenger> passengers) {
-        this.passengers = passengers;
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
     }
 }
-

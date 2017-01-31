@@ -1,6 +1,7 @@
 package com.allstate.services;
 
 import com.allstate.entities.City;
+import com.allstate.entities.Passenger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -55,9 +60,29 @@ public class CityServiceTest {
     }
 
     @Test
+    public void shouldFindCityByName() {
+        City after = this.cityService.findByName("Banglore");
+        assertEquals("Banglore",after.getName());
+    }
+
+    @Test
     public void shouldNotFindCityWithBadId() {
         City after = this.cityService.find(6);
         assertNull(after);
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindAllThePassengersOfBangloreCity() {
+         List<Passenger> passengers = this.cityService.findByName("Banglore").getPassengers();
+         assertEquals(2,passengers.size());
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindAllThePassengersOfPuneCity() {
+        List<Passenger> passengers = this.cityService.findByName("Pune").getPassengers();
+        assertEquals(0,passengers.size());
     }
 
 }
