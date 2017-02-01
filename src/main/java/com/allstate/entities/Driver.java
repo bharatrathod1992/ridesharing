@@ -24,7 +24,9 @@ public class Driver {
     private Date created;
     private Date modified;
     private List<Car> cars;
-
+    private List<City> cities;
+    private List<Trip> trips;
+    private boolean banned;
 
     public Driver() {
 
@@ -101,5 +103,26 @@ public class Driver {
     }
     public void setCars(List<Car> cars) {
         this.cars = cars;
+    }
+
+    @ManyToMany
+    @JoinTable(name = "cars",
+            joinColumns = @JoinColumn(name = "cities_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "drivers_id", referencedColumnName = "id"))
+    @JsonIgnore
+    public List<City> getCities() {
+        return cities;
+    }
+    public void setCities(List<City> cities) {
+        this.cities = cities;
+    }
+
+    @OneToMany(mappedBy = "driver")
+    @JsonIgnore
+    public List<Trip> getTrips() {
+        return trips;
+    }
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
     }
 }

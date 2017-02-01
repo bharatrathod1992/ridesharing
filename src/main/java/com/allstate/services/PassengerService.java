@@ -17,4 +17,8 @@ public class PassengerService {
     public Passenger find(int id) {
         return this.passengerRepository.findOne(id);
     }
+
+    public Passenger create(Passenger passenger) {
+        return this.passengerRepository.save(passenger);
+    }
 }

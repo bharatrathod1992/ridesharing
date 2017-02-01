@@ -1,7 +1,9 @@
 package com.allstate.services;
 
 import com.allstate.entities.City;
+import com.allstate.entities.Driver;
 import com.allstate.entities.Passenger;
+import com.allstate.enums.Gender;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,12 @@ import static org.junit.Assert.*;
 public class PassengerServiceTest {
 
     private PassengerService passengerService;
+    private CityService cityService;
+
+    @Autowired
+    public void setCityService(CityService cityService) {
+        this.cityService = cityService;
+    }
 
     @Autowired
     public void setPassengerService(PassengerService passengerService) {
@@ -33,6 +41,20 @@ public class PassengerServiceTest {
     @After
     public void tearDown() throws Exception {
 
+    }
+
+    @Test
+    public void shouldCreatePassenger() {
+        Passenger passenger = new Passenger("Rakesh",25, Gender.MALE,2500);
+        passenger.setCity(this.cityService.find(1));
+        Passenger after = this.passengerService.create(passenger);
+        assertNotNull(after);
+    }
+
+    @Test(expected = org.springframework.dao.DataIntegrityViolationException.class)
+    public void shouldNotCreatePassengerIfCityIsNotSet() {
+        Passenger passenger = new Passenger("Rakesh",25, Gender.MALE,2500);
+        Passenger after = this.passengerService.create(passenger);
     }
 
     @Test

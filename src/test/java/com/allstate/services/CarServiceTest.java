@@ -1,10 +1,8 @@
 package com.allstate.services;
 
-import com.allstate.entities.Car;
-import com.allstate.entities.Driver;
-import com.allstate.entities.Passenger;
+import com.allstate.entities.*;
 import com.allstate.enums.CarType;
-import com.allstate.enums.Gender;
+import com.allstate.enums.TripType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -24,6 +24,24 @@ public class CarServiceTest {
 
     private CarService carService;
     private DriverService driverService;
+    private CityService cityService;
+    private PassengerService passengerService;
+    private TripService tripService;
+
+    @Autowired
+    public void setPassengerService(PassengerService passengerService) {
+        this.passengerService = passengerService;
+    }
+
+    @Autowired
+    public void setTripService(TripService tripService) {
+        this.tripService = tripService;
+    }
+
+    @Autowired
+    public void setCityService(CityService cityService) {
+        this.cityService = cityService;
+    }
 
     @Autowired
     public void setDriverService(DriverService driverService) {
@@ -48,10 +66,21 @@ public class CarServiceTest {
     @Test
     public void shouldCreateCar(){
         Driver d = this.driverService.find(1);
+        City city = this.cityService.find(1);
         Car car = new Car("TATA","NANO",2014, CarType.NORMAL);
         car.setDriver(d);
+        car.setCity(city);
         Car after = this.carService.create(car);//actually this line wants driver_id
         assertNotNull(after);
+    }
+
+    @Test(expected = org.springframework.dao.DataIntegrityViolationException.class)
+    public void shouldNotCreateCarIfNoCityProvided(){
+        Driver d = this.driverService.find(1);
+        City city = this.cityService.find(1);
+        Car car = new Car("TATA","NANO",2014, CarType.NORMAL);
+        car.setDriver(d);
+        Car after = this.carService.create(car);
     }
 
     @Test
@@ -71,5 +100,31 @@ public class CarServiceTest {
     public void shouldFindTheDriverWhoDriveTheCar() {
         Driver driver = this.carService.find(1).getDriver();
         assertEquals(1,driver.getId());
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindAllTheTripsForTheCar() {
+
+        Trip before1 = new Trip(TripType.DAY, 20);
+        Car car = this.carService.find(1);
+        Passenger passenger = this.passengerService.find(2);
+        before1.setCar(car);
+        before1.setDriver(this.driverService.find(1));
+        before1.setPassenger(passenger);
+        before1.setTipPercent(10);
+        Trip first = this.tripService.addTrip(before1);
+
+        Trip before2 = new Trip(TripType.DAY, 20);
+        Car car2 = this.carService.find(1);
+        Passenger passenger2 = this.passengerService.find(2);
+        before2.setCar(car2);
+        before2.setDriver(this.driverService.find(1));
+        before2.setPassenger(passenger2);
+        before2.setTipPercent(10);
+        Trip second = this.tripService.addTrip(before2);
+
+        List<Trip> trips = this.carService.find(1).getTrips();
+        assertEquals(4,trips.size());
     }
 }

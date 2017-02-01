@@ -18,15 +18,22 @@ public class DriverService {
         return this.driverRepository.findOne(id);
     }
 
-    public Driver violation(int id) throws Exception {
+    public Driver violation(int id){
         Driver result = this.driverRepository.findOne(id);
-        if(result.getNoOfViolation()==3) {
-            throw new Exception("SORRY YOU ARE NO LONGER MEMBER OF THE COMPANY, YOU ARE BANNED");
+
+        if((result.getNoOfViolation())>=2) {
+            result.setNoOfViolation(result.getNoOfViolation()+1);
+            result.setBanned(true);
+            this.driverRepository.save(result);
         }
         else{
             result.setNoOfViolation(result.getNoOfViolation()+1);
             this.driverRepository.save(result);
         }
         return result;
+    }
+
+    public Driver create(Driver driver) {
+        return this.driverRepository.save(driver);
     }
 }

@@ -1,6 +1,7 @@
 package com.allstate.services;
 
 import com.allstate.entities.City;
+import com.allstate.entities.Driver;
 import com.allstate.entities.Passenger;
 import org.junit.After;
 import org.junit.Before;
@@ -73,16 +74,23 @@ public class CityServiceTest {
 
     @Test
     @Transactional
-    public void shouldFindAllThePassengersOfBangloreCity() {
+    public void shouldFindAllPassengersOfBangloreCity() {
          List<Passenger> passengers = this.cityService.findByName("Banglore").getPassengers();
          assertEquals(2,passengers.size());
     }
 
     @Test
     @Transactional
-    public void shouldFindAllThePassengersOfPuneCity() {
+    public void shouldFindAllPassengersOfPuneCity() {
         List<Passenger> passengers = this.cityService.findByName("Pune").getPassengers();
         assertEquals(0,passengers.size());
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindAllDriversOfBangloreCity() {
+        List<Driver> driversOfBangloreCity = this.cityService.findByName("Banglore").getDrivers();
+        assertEquals(2,driversOfBangloreCity.size());
     }
 
 }

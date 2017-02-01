@@ -23,6 +23,8 @@ public class City {
     private Date created;
     private Date modified;
     private List<Passenger> passengers;
+    private List<Car> cars;
+    private List<Driver> drivers;
 
     public City() {
     }
@@ -106,6 +108,24 @@ public class City {
     }
     public void setPassengers(List<Passenger> passengers) {
         this.passengers = passengers;
+    }
+
+    @OneToMany(mappedBy = "city")
+    @JsonIgnore
+    public List<Car> getCars() {
+        return cars;
+    }
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
+    }
+
+    @ManyToMany(mappedBy = "cities")
+    @JsonIgnore
+    public List<Driver> getDrivers() {
+        return drivers;
+    }
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
     }
 }
 

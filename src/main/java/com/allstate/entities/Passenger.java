@@ -1,12 +1,14 @@
 package com.allstate.entities;
 
 import com.allstate.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "passengers")
@@ -21,6 +23,7 @@ public class Passenger {
     private Date created;
     private Date modified;
     private City city;
+    private List<Trip> trips;
 
     public Passenger() {
     }
@@ -105,5 +108,14 @@ public class Passenger {
     }
     public void setCity(City city) {
         this.city = city;
+    }
+
+    @OneToMany(mappedBy = "passenger")
+    @JsonIgnore
+    public List<Trip> getTrips() {
+        return trips;
+    }
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
     }
 }
